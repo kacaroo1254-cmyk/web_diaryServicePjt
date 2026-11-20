@@ -33,12 +33,32 @@ values('seari', '1111', 'seari@gmail.com', '010-1234-7777');
 insert into tbl_member(memId, memPw, memMail, memPhone)
 values('seari2', '1111', 'seari@gmail.com', '010-1234-7777');
 
-set @@auto_increment_increment = 3;
+SET GLOBAL auto_increment_increment = 3;
 
 drop table tbl_member;
 
 select count(*) cnt from tbl_member where memId = 'gildong';
 
 delete from tbl_member;
+
+select 
+	* 
+from 
+	tbl_member 
+where 
+	memId = 'gildong';
+
+create table tbl_diary(
+	diaryNo			int auto_increment,
+	diaryWord		varchar(100) not null,
+	memId			varchar(20)		unique	not null, 
+	diaryRegDate	timestamp		default current_timestamp,
+	diaryModDate	timestamp		default current_timestamp	on update current_timestamp,
+	primary key(diaryNo)
+) auto_increment = 10001;
+
+show tables;
+desc tbl_diary;
+select * from tbl_diary;
 
 

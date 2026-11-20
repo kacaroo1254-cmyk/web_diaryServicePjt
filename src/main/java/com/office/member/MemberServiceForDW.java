@@ -5,10 +5,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class MemberServiceForDW implements IMemberService {
 	
-	final private IMemberDao iMemberDao;	
+	final private IMemberDao memberDao;	
 	
-	public MemberServiceForDW(IMemberDao iMemberDao) {
-		this.iMemberDao = iMemberDao;
+	public MemberServiceForDW(IMemberDao memberDao) {
+		this.memberDao = memberDao;
 	}
 
 	@Override
@@ -21,19 +21,41 @@ public class MemberServiceForDW implements IMemberService {
 		
 		MemberDto memberDto = new MemberDto(memId, memPw, memMail, memPhone);
 		
-		boolean isMember = iMemberDao.isMember(memId);
+		boolean isMember = memberDao.isMember(memId);
 		int result = 0;
 		if (!isMember) {
-			result = iMemberDao.insertNewMember(memberDto);
+			result = memberDao.insertNewMember(memberDto);
 		}
 		
 		return result;
 	}
 
 	@Override
-	public int signin(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		return 0;
+	public MemberDto signin(HttpServletRequest request, HttpServletResponse response) {
+		
+		String memId = request.getParameter("memId");
+		String memPw = request.getParameter("memPw");
+		
+		MemberDto selectedMemberDto = memberDao.selectMemberByMemId(memId);
+		
+		if (selectedMemberDto != null) {
+			System.out.println("selectedMemberDto is not null");
+			
+			if (selectedMemberDto.getMemPw().equals(memPw)) {
+				System.out.println("signin success!!");
+				return selectedMemberDto;
+				
+			} else {
+				System.out.println("signin fail!!");
+				return null;
+				
+			}
+		} else {
+			System.out.println("selectedMemberDto is null");
+			System.out.println("signin fail!!");
+			return null;
+		}
+		
 	}
 	
 	
